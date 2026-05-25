@@ -1,0 +1,5 @@
+native/win-build/
+native/build/
+dotnet/bin/
+dotnet/obj/
+*.user
