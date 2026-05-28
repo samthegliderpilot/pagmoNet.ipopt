@@ -9,9 +9,6 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-# This workflow assumes pagmoNet and the language repos are wired as submodules.
-# Until submodule wiring is complete, builds need to be done manually.
-
 jobs:
 
   build-windows:
@@ -56,6 +53,12 @@ jobs:
         run: dotnet test dotnet/ -p:Platform=x64 --logger "console;verbosity=minimal"
         shell: pwsh
 
+      - name: Test Java add-on
+        run: |
+          $env:PAGMO4J_NATIVE_DIR = "pagmoNet/native/win-build"
+          ./gradlew :java:test --info
+        shell: pwsh
+
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -66,6 +69,11 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.x'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
 
       - name: Install build tools
         run: |
@@ -91,3 +99,51 @@ jobs:
 
       - name: Build and test .NET add-on
         run: dotnet test dotnet/ -p:Platform=x64 --logger "console;verbosity=minimal"
+
+      - name: Test Java add-on
+        run: |
+          export PAGMO4J_NATIVE_DIR="pagmoNet/native/build"
+          ./gradlew :java:test --info
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install build tools
+        run: brew install autoconf autoconf-archive automake libtool swig powershell
+
+      - name: Bootstrap vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg ~/vcpkg --depth 1
+          ~/vcpkg/bootstrap-vcpkg.sh -disableMetrics
+          echo "VCPKG_ROOT=$HOME/vcpkg" >> $GITHUB_ENV
+
+      - name: Cache vcpkg installed
+        uses: actions/cache@v4
+        with:
+          path: ~/vcpkg/installed
+          key: vcpkg-macos-ipopt-${{ hashFiles('pagmoNet/ports/**', 'ports/**', 'pagmoNet/native/CMakeLists.txt') }}
+          restore-keys: vcpkg-macos-ipopt-
+
+      - name: Build native (NLopt; IPOPT deferred on macOS)
+        run: pwsh pagmoNet/scripts/build-native.ps1 -Configuration Release
+
+      - name: Build and test .NET add-on
+        run: dotnet test dotnet/ -p:PlatformTarget=AnyCPU --logger "console;verbosity=minimal"
+
+      - name: Test Java add-on
+        run: |
+          export PAGMO4J_NATIVE_DIR="pagmoNet/native/build"
+          ./gradlew :java:test --info

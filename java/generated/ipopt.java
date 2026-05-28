@@ -6,9 +6,9 @@
  * the SWIG interface file instead.
  * ----------------------------------------------------------------------------- */
 
-package io.github.samthegliderpilot.pagmo4j;
-import io.github.samthegliderpilot.pagmo4j.algorithms.*;
-public class ipopt implements io.github.samthegliderpilot.pagmo4j.algorithms.IAlgorithm, AutoCloseable {
+package io.github.samthegliderpilot.pagmonet4j;
+import io.github.samthegliderpilot.pagmonet4j.algorithms.*;
+public class ipopt implements io.github.samthegliderpilot.pagmonet4j.algorithms.IAlgorithm, AutoCloseable {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;
 
@@ -42,7 +42,7 @@ public class ipopt implements io.github.samthegliderpilot.pagmo4j.algorithms.IAl
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
-        pagmo4jJNI.delete_ipopt(swigCPtr);
+        pagmonet4jJNI.delete_ipopt(swigCPtr);
       }
       swigCPtr = 0;
     }
@@ -54,63 +54,63 @@ public class ipopt implements io.github.samthegliderpilot.pagmo4j.algorithms.IAl
     @Override public void close() { delete(); }
 
   public population evolve(population arg0) {
-    return new population(pagmo4jJNI.ipopt_evolve(swigCPtr, this, population.getCPtr(arg0), arg0), true);
+    return new population(pagmonet4jJNI.ipopt_evolve(swigCPtr, this, population.getCPtr(arg0), arg0), true);
   }
 
   public String get_name() {
-    return pagmo4jJNI.ipopt_get_name(swigCPtr, this);
+    return pagmonet4jJNI.ipopt_get_name(swigCPtr, this);
   }
 
   public String get_extra_info() {
-    return pagmo4jJNI.ipopt_get_extra_info(swigCPtr, this);
+    return pagmonet4jJNI.ipopt_get_extra_info(swigCPtr, this);
   }
 
   public void set_verbosity(long n) {
-    pagmo4jJNI.ipopt_set_verbosity(swigCPtr, this, n);
+    pagmonet4jJNI.ipopt_set_verbosity(swigCPtr, this, n);
   }
 
   public void set_string_option(String arg0, String arg1) {
-    pagmo4jJNI.ipopt_set_string_option(swigCPtr, this, arg0, arg1);
+    pagmonet4jJNI.ipopt_set_string_option(swigCPtr, this, arg0, arg1);
   }
 
   public void set_numeric_option(String arg0, double arg1) {
-    pagmo4jJNI.ipopt_set_numeric_option(swigCPtr, this, arg0, arg1);
+    pagmonet4jJNI.ipopt_set_numeric_option(swigCPtr, this, arg0, arg1);
   }
 
   public void reset_string_options() {
-    pagmo4jJNI.ipopt_reset_string_options(swigCPtr, this);
+    pagmonet4jJNI.ipopt_reset_string_options(swigCPtr, this);
   }
 
   public void reset_integer_options() {
-    pagmo4jJNI.ipopt_reset_integer_options(swigCPtr, this);
+    pagmonet4jJNI.ipopt_reset_integer_options(swigCPtr, this);
   }
 
   public void reset_numeric_options() {
-    pagmo4jJNI.ipopt_reset_numeric_options(swigCPtr, this);
+    pagmonet4jJNI.ipopt_reset_numeric_options(swigCPtr, this);
   }
 
   public ThreadSafety get_thread_safety() {
-    return ThreadSafety.swigToEnum(pagmo4jJNI.ipopt_get_thread_safety(swigCPtr, this));
+    return ThreadSafety.swigToEnum(pagmonet4jJNI.ipopt_get_thread_safety(swigCPtr, this));
   }
 
   public int get_last_opt_result_code() {
-    return pagmo4jJNI.ipopt_get_last_opt_result_code(swigCPtr, this);
+    return pagmonet4jJNI.ipopt_get_last_opt_result_code(swigCPtr, this);
   }
 
   public void set_integer_option_u64(String name, java.math.BigInteger value) {
-    pagmo4jJNI.ipopt_set_integer_option_u64(swigCPtr, this, name, value);
+    pagmonet4jJNI.ipopt_set_integer_option_u64(swigCPtr, this, name, value);
   }
 
   public IpoptLogEntryVector get_log_entries() {
-    return new IpoptLogEntryVector(pagmo4jJNI.ipopt_get_log_entries(swigCPtr, this), true);
+    return new IpoptLogEntryVector(pagmonet4jJNI.ipopt_get_log_entries(swigCPtr, this), true);
   }
 
   public algorithm to_algorithm() {
-    return new algorithm(pagmo4jJNI.ipopt_to_algorithm(swigCPtr, this), true);
+    return new algorithm(pagmonet4jJNI.ipopt_to_algorithm(swigCPtr, this), true);
   }
 
   public ipopt() {
-    this(pagmo4jJNI.new_ipopt(), true);
+    this(pagmonet4jJNI.new_ipopt(), true);
   }
 
 }
